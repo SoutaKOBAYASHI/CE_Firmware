@@ -56,11 +56,14 @@ void SVC_Handler(void);
 void DebugMon_Handler(void);
 void PendSV_Handler(void);
 void SysTick_Handler(void);
+void EXTI0_IRQHandler(void);
 void USART1_IRQHandler(void);
 /* USER CODE BEGIN EFP */
 //extern void HAL_UART_RxCpltCallback(UART_HandleTypeDef *UartHandle);
 }
 extern InterruptAccessor::Map SysTick_Accessor;
+extern InterruptAccessor::Map UART_IRQ_Accessor;
+extern InterruptAccessor::Map EXTI_IRQ_Accessor;
 //extern InterruptAccessor::Map USART1_IRQ_Accessor;
 /* USER CODE END EFP */
 

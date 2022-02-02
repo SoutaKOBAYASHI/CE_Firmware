@@ -75,8 +75,8 @@ all: main-build
 main-build: watchable_firmware.elf secondary-outputs
 
 # Tool invocations
-watchable_firmware.elf: $(OBJS) $(USER_OBJS) C:\Users\KobayashiSouta\Documents\code\CE_Firmware\watchable_firmware\STM32F303K8TX_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
-	arm-none-eabi-g++ -o "watchable_firmware.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m4 -T"C:\Users\KobayashiSouta\Documents\code\CE_Firmware\watchable_firmware\STM32F303K8TX_FLASH.ld" -Wl,-Map="watchable_firmware.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -lstdc++ -lsupc++ -Wl,--end-group
+watchable_firmware.elf: $(OBJS) $(USER_OBJS) C:\Users\kobasou\Documents\code\CE_Firmware\watchable_firmware\STM32F303K8TX_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
+	arm-none-eabi-g++ -o "watchable_firmware.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m4 -T"C:\Users\kobasou\Documents\code\CE_Firmware\watchable_firmware\STM32F303K8TX_FLASH.ld" --specs=nosys.specs -Wl,-Map="watchable_firmware.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -lstdc++ -lsupc++ -Wl,--end-group
 	@echo 'Finished building target: $@'
 	@echo ' '
 

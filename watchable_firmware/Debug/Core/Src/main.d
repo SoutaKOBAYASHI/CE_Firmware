@@ -30,7 +30,8 @@ Core/Src/main.o: ../Core/Src/main.cpp ../Core/Inc/main.h \
  ../Drivers/STM32F3xx_HAL_Driver/Inc/stm32f3xx_hal_uart_ex.h \
  ../Core/Inc/led.hpp ../Core/Inc/params.hpp ../Core/Inc/params.hpp \
  ../Core/Inc/interrupt.hpp ../Core/Inc/stm32f3xx_it.h \
- ../Core/Inc/interrupt.hpp
+ ../Core/Inc/interrupt.hpp ../Core/Inc/uart.hpp ../Core/Inc/rplider.h \
+ ../Core/Inc/vector2d.hpp ../Core/Inc/uart.hpp ../Core/Inc/switch.hpp
 ../Core/Inc/main.h:
 ../Drivers/STM32F3xx_HAL_Driver/Inc/stm32f3xx_hal.h:
 ../Core/Inc/stm32f3xx_hal_conf.h:
@@ -67,3 +68,8 @@ Core/Src/main.o: ../Core/Src/main.cpp ../Core/Inc/main.h \
 ../Core/Inc/interrupt.hpp:
 ../Core/Inc/stm32f3xx_it.h:
 ../Core/Inc/interrupt.hpp:
+../Core/Inc/uart.hpp:
+../Core/Inc/rplider.h:
+../Core/Inc/vector2d.hpp:
+../Core/Inc/uart.hpp:
+../Core/Inc/switch.hpp:

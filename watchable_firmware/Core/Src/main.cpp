@@ -10,6 +10,9 @@
 #include "params.hpp"
 #include "interrupt.hpp"
 #include "stm32f3xx_it.h"
+#include "uart.hpp"
+#include "rplider.h"
+#include "switch.hpp"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -76,60 +79,32 @@ int main(void)
   MX_TIM1_Init();
   /* USER CODE BEGIN 2 */
   LED led(&htim1);
-  //UART uart(&huart1, USART1_IRQ_Accessor);
+  Switch sw(SW_IN_GPIO_Port, SW_IN_Pin, EXTI_IRQ_Accessor);
+  //UART uart(&huart1, UART_IRQ_Accessor);
   //RPLIDER lider(uart, SysTick_Accessor);
 
-  std::function<void(void)> systick_func = [&]()
-		  {
-	  	  	  static uint16_t tim_cnt = 0;
-	  	  	  static uint8_t count = 0;
-	  	  	  if(tim_cnt >= 1000)
-	  	  	  {
-				  switch(count)
-				  {
-				  case 0:
-					  led.setColor(LED::Color::R);
-					  count = 1;
-					  break;
-				  case 1:
-					  led.setColor(LED::Color::Y);
-					  count = 2;
-					  break;
-				  case 2:
-					  led.setColor(LED::Color::G);
-					  count = 0;
-					  break;
+  std::function<void(void)> systick_func = [&](){
+	  static uint64_t count = 0;
+	  if(sw.isRead())
+	  {
+		  count = 0;
+	  }
+	  if(count < COUNT_G_TO_Y)
+	  {
+		  led.setColor(LED::Color::G);
+		  ++count;
+	  }
+	  else if(count - COUNT_G_TO_Y  < COUNT_Y_TO_R)
+	  {
+		  led.setColor(LED::Color::Y);
+		  ++count;
+	  }
+	  else
+	  {
+		  led.setColor(LED::Color::R);
+	  }
+  };
 
-				  }
-				  tim_cnt = 0;
-	  	  	  }
-	  	  	  else
-	  	  	  {
-	  	  		  ++tim_cnt;
-	  	  	  }
-				  /*
-	  	  	  if(lider.isScanning())
-	  	  	  {
-
-	  	  		  vector2d<double> vec;
-	  	  		  while(!lider.isGotPointQueueEnpty())
-	  	  		  {
-	  	  			  vec = lider.readGotPointQueue();
-	  	  			  uint32_t col;
-	  	  			  if(10.0 > vec.rec().second && vec.rec().second > -10.0 && vec.rec().first < 0)
-	  	  			  {
-	  	  				  col = static_cast<uint32_t>(vec.rec().first * -1.0);
-	  	  				  if(col > 255)col = 255;
-	  	  				  led.setColor(0, col);
-	  	  			  }
-	  	  		  }
-
-	  	  	  }
-	  	  	  else
-	  	  	  {
-	  	  		  //led.setColor(LED::Color::R);
-	  	  	  }*/
-		  };
   //led.setColor(LED::Color::G);
   InterruptAccessor systick_it(SysTick_Accessor, systick_func);
 
@@ -152,6 +127,7 @@ int main(void)
   while (1)
   {
     /* USER CODE END WHILE */
+
     /* USER CODE BEGIN 3 */
   }
   /* USER CODE END 3 */
@@ -328,11 +304,15 @@ static void MX_GPIO_Init(void)
   __HAL_RCC_GPIOB_CLK_ENABLE();
   __HAL_RCC_GPIOA_CLK_ENABLE();
 
-  /*Configure GPIO pin : PB0 */
-  GPIO_InitStruct.Pin = GPIO_PIN_0;
-  GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
-  GPIO_InitStruct.Pull = GPIO_NOPULL;
-  HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
+  /*Configure GPIO pin : SW_IN_Pin */
+  GPIO_InitStruct.Pin = SW_IN_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_IT_FALLING;
+  GPIO_InitStruct.Pull = GPIO_PULLUP;
+  HAL_GPIO_Init(SW_IN_GPIO_Port, &GPIO_InitStruct);
+
+  /* EXTI interrupt init*/
+  HAL_NVIC_SetPriority(EXTI0_IRQn, 0, 0);
+  HAL_NVIC_EnableIRQ(EXTI0_IRQn);
 
 }
 

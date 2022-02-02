@@ -60,6 +60,8 @@
 extern UART_HandleTypeDef huart1;
 /* USER CODE BEGIN EV */
 InterruptAccessor::Map SysTick_Accessor;
+InterruptAccessor::Map UART_IRQ_Accessor;
+InterruptAccessor::Map EXTI_IRQ_Accessor;
 //InterruptAccessor::Map USART1_IRQ_Accessor;
 /* USER CODE END EV */
 
@@ -199,6 +201,20 @@ void SysTick_Handler(void)
 /* For the available peripheral interrupt handler names,                      */
 /* please refer to the startup file (startup_stm32f3xx.s).                    */
 /******************************************************************************/
+
+/**
+  * @brief This function handles EXTI line 0 interrupt.
+  */
+void EXTI0_IRQHandler(void)
+{
+  /* USER CODE BEGIN EXTI0_IRQn 0 */
+
+  /* USER CODE END EXTI0_IRQn 0 */
+  HAL_GPIO_EXTI_IRQHandler(GPIO_PIN_0);
+  /* USER CODE BEGIN EXTI0_IRQn 1 */
+  for(auto& i : EXTI_IRQ_Accessor)i.second();
+  /* USER CODE END EXTI0_IRQn 1 */
+}
 
 /**
   * @brief This function handles USART1 global interrupt / USART1 wake-up interrupt through EXT line 25.
